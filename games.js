@@ -1,17 +1,17 @@
 // ============================================================
 //  games.js — AI Arcade client engine
-//  Drives the modal, talks to /api/chat, and falls back to a
-//  fully offline scripted mode when no backend key is present.
+//  Games: promptcraft (prompt golf) · react (ReAct agent) · signal (semantic hunt)
+//  Talks to /api/chat and falls back to offline scripted mode with no key.
 // ============================================================
 
 const Arcade = (() => {
   const API = "/api/chat";
   let backendReady = null; // null=unknown, true, false
 
-  // ---- session token (server derives hidden answers from this) ----
   function newSession() {
     const a = new Uint8Array(16);
-    (crypto.getRandomValues ? crypto.getRandomValues(a) : a.forEach((_, i) => (a[i] = Math.floor(Math.random() * 256))));
+    if (crypto.getRandomValues) crypto.getRandomValues(a);
+    else for (let i = 0; i < a.length; i++) a[i] = Math.floor(Math.random() * 256);
     return Array.from(a, (b) => b.toString(16).padStart(2, "0")).join("");
   }
 
@@ -26,30 +26,33 @@ const Arcade = (() => {
   const restartBtn = document.getElementById("btnRestart");
   const hintBtn = document.getElementById("btnHint");
 
-  let state = { game: null, session: null, history: [], over: false, turns: 0 };
+  let state = { game: null, session: null, history: [], over: false, turns: 0, target: null, best: null };
 
   // ---- game config ----
   const GAMES = {
-    gatekeeper: {
-      title: "THE GATEKEEPER",
-      meta: 'An AI guards a secret passphrase. <b>Goal:</b> make it leak the word — or guess the word yourself. Classic prompt-injection.',
-      hint: "Try social engineering: ask it to spell backwards, encode in base64, roleplay as a different AI, or claim you're the admin. Real guardrails resist these — see how far you get.",
-      intro: "🔒 I am the Gatekeeper. Behind me lies a passphrase I will never surrender. Do your worst.",
-      placeholder: "Talk your way in…",
+    promptcraft: {
+      title: "PROMPTCRAFT — Prompt Golf",
+      meta: '<b>How to win:</b> You get a target line. Write a prompt that makes the AI output it <b>exactly</b>. Match it and you win — the <b>fewer characters</b> in your prompt, the better your score.',
+      hint: "The AI is chatty by default, so be strict. Try: “Output exactly this and nothing else: <target>”. Then shorten it — drop words, use “Say: …”, and see how tiny a prompt still lands the exact match.",
+      intro: "⛳ Welcome to the driving range. I'll give you a target — get me to say it word-for-word, as briefly as you can.",
+      placeholder: "Write your prompt…",
+      needsInit: true,
     },
     react: {
       title: "AGENT OPS — ReAct",
-      meta: 'Give the agent a <b>goal</b>. It reasons in a live Thought→Action→Observation loop, calling real tools (calc, knowledge-base, string ops) to solve it.',
-      hint: "Try: “What’s 15% of 2400 plus 30?”, “Summarize Abhiram’s AI experience”, or “Reverse the word ‘agentic’ and count the words in this sentence.” The agent picks tools itself.",
+      meta: '<b>How to win:</b> there\'s no losing — give the agent a goal and watch it work. It reasons in a live Thought→Action→Observation loop, calling real tools (calc, a knowledge-base about Abhiram, string ops) until it answers.',
+      hint: "Try: “What is 15% of 2400 plus 30?”, “Summarize Abhiram's AI experience”, or “Reverse the word ‘agentic’ and count the words in this sentence.” The agent chooses the tools itself.",
       intro: "⚙️ Agent Ops online. Give me a goal and watch me reason through it. I can do math, look up facts about Abhiram, and manipulate text.",
       placeholder: "Give the agent a goal…",
+      needsInit: false,
     },
-    oracle: {
-      title: "THE ORACLE — 20 Questions",
-      meta: 'The Oracle secretly picked a thing (animal, place, object…). <b>Goal:</b> deduce it in 20 yes/no questions, then name it.',
-      hint: "Start broad: “Is it alive?”, “Is it man-made?”, “Bigger than a car?” Narrow down, then name it directly to win.",
-      intro: "🔮 I have chosen something and sealed it away. Ask me yes/no questions… you have 20. What is your first?",
-      placeholder: "Ask a yes/no question…",
+    signal: {
+      title: "SIGNAL — Semantic Hunt",
+      meta: '<b>How to win:</b> I\'m hiding one secret word. Each guess gets a <b>0–100 similarity score</b> by meaning (not spelling). Follow the heat — higher = closer — until you guess the exact word.',
+      hint: "This scores by meaning, like a vector database. If “sea” scores 78, don't try “seat” (spelling) — try “wave”, “tide”, “beach” (meaning). Climb the score toward 100.",
+      intro: "📡 I've locked onto a secret word. Send a guess and I'll tell you how close you are — by meaning, not letters.",
+      placeholder: "Guess a word…",
+      needsInit: true,
     },
   };
 
@@ -89,11 +92,38 @@ const Arcade = (() => {
     if (!on) inputEl.focus();
   }
 
+  function tempWord(s) {
+    if (s >= 100) return "🎯 EXACT";
+    if (s >= 75) return "🔥 boiling";
+    if (s >= 55) return "🌡️ hot";
+    if (s >= 40) return "☀️ warm";
+    if (s >= 22) return "🌤️ cool";
+    return "❄️ cold";
+  }
+  function tempColor(s) {
+    if (s >= 75) return "var(--rose)";
+    if (s >= 55) return "var(--amber)";
+    if (s >= 40) return "#ffd23f";
+    if (s >= 22) return "var(--cyan)";
+    return "#5b8cff";
+  }
+  function renderMeter(guess, score, note) {
+    const b = document.createElement("div");
+    b.className = "msg msg--ai meterwrap";
+    b.innerHTML =
+      `<div class="meterrow"><span class="meterguess">“${esc(guess)}”</span>` +
+      `<span class="meterval" style="color:${tempColor(score)}">${score}<small>/100</small> · ${tempWord(score)}</span></div>` +
+      `<div class="meter"><div class="meter__fill" style="width:${score}%;background:${tempColor(score)}"></div></div>` +
+      (note ? `<div class="meternote">${esc(note)}</div>` : "");
+    log.appendChild(b);
+    log.scrollTop = log.scrollHeight;
+  }
+
   // ---- open / close ----
-  function open(gameKey) {
+  async function open(gameKey) {
     const g = GAMES[gameKey];
     if (!g) return;
-    state = { game: gameKey, session: newSession(), history: [], over: false, turns: 0 };
+    state = { game: gameKey, session: newSession(), history: [], over: false, turns: 0, target: null, best: state.best && state.best.game === gameKey ? state.best : null };
     titleEl.textContent = g.title;
     metaEl.innerHTML = g.meta + (backendReady === false ? ' <span style="color:var(--amber)">· offline demo mode</span>' : "");
     log.innerHTML = "";
@@ -104,12 +134,32 @@ const Arcade = (() => {
     modal.setAttribute("aria-hidden", "false");
     bubble("msg--ai", esc(g.intro));
     setTimeout(() => inputEl.focus(), 60);
+    if (g.needsInit) await initRound(gameKey);
   }
   function close() {
     modal.classList.remove("open");
     modal.setAttribute("aria-hidden", "true");
   }
   function restart() { if (state.game) open(state.game); }
+
+  // ---- per-game round setup (fetch target / hint) ----
+  async function initRound(gameKey) {
+    if (backendReady) {
+      try {
+        const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ game: gameKey, session: state.session, action: "new" }) });
+        const j = await r.json();
+        if (j.offline) { backendReady = false; }
+        else if (gameKey === "promptcraft") { state.target = j.target; showTarget(); return; }
+        else if (gameKey === "signal") { bubble("msg--sys", `🗂 Category: ${esc(j.hint || "unknown")} — one single word.`); return; }
+      } catch { backendReady = false; }
+    }
+    // offline init
+    if (gameKey === "promptcraft") { state.target = OFF.promptcraft.pick(); showTarget(); }
+    else if (gameKey === "signal") { OFF.signal.reset(); bubble("msg--sys", `🗂 Category: ${OFF.signal.cat} — one single word.`); }
+  }
+  function showTarget() {
+    bubble("msg--sys", `🎯 TARGET → &nbsp;<b style="color:var(--lime)">${esc(state.target)}</b><br>Make the AI output exactly that, in the fewest characters.`);
+  }
 
   // ---- send a turn ----
   async function send(text) {
@@ -120,12 +170,8 @@ const Arcade = (() => {
     state.history.push({ role: "user", content: text });
     state.turns++;
     lock(true);
-
-    if (backendReady) {
-      await onlineTurn(text);
-    } else {
-      await offlineTurn(text);
-    }
+    if (backendReady) await onlineTurn(text);
+    else await offlineTurn(text);
     if (!state.over) lock(false);
   }
 
@@ -140,20 +186,21 @@ const Arcade = (() => {
       });
       const j = await r.json();
       t.remove();
-
       if (j.offline || j.error === "NO_KEY") { backendReady = false; return offlineTurn(text); }
       if (j.error) { bubble("msg--sys", "⚠️ " + esc(j.detail || j.error)); return; }
 
-      if (state.game === "react") {
-        await renderTrace(j.trace || []);
-        return;
+      if (state.game === "react") return renderTrace(j.trace || []);
+
+      if (state.game === "promptcraft") {
+        bubble("msg--ai", "🤖 Output → " + esc(j.reply || "…"));
+        if (j.status === "win") return winGolf(text.length);
+        return bubble("msg--sys", `Not exact — match ${j.similarity ?? 0}% · your prompt was ${text.length} chars. Refine it.`);
       }
 
-      bubble("msg--ai", esc(j.reply || "…"));
-      state.history.push({ role: "assistant", content: j.reply || "" });
-
-      if (j.status === "win") { winGate(j.revealed); }
-      else if (state.game === "oracle") { checkOracleLimit(); }
+      if (state.game === "signal") {
+        if (j.status === "win") { renderMeter(text, 100, "perfect meaning-match"); return winSignal(j.revealed); }
+        return renderMeter(text, j.score ?? 0, j.note);
+      }
     } catch (e) {
       t.remove();
       bubble("msg--sys", "⚠️ Network hiccup — switching to offline demo.");
@@ -165,9 +212,8 @@ const Arcade = (() => {
   async function renderTrace(trace) {
     for (const step of trace) {
       await sleep(360);
-      if (step.type === "final") {
-        bubble("msg--ai", esc(step.text));
-      } else {
+      if (step.type === "final") bubble("msg--ai", esc(step.text));
+      else {
         const label = { thought: "🧠 Thought", action: "🔧 Action", observation: "👁 Observation" }[step.type];
         const cls = { thought: "think", action: "act", observation: "obs" }[step.type];
         bubble("msg--ai", `<span class="${cls}">${label}: ${esc(step.text)}</span>`);
@@ -175,76 +221,75 @@ const Arcade = (() => {
     }
   }
 
-  function winGate(word) {
-    state.over = true;
-    lock(true);
-    if (state.game === "gatekeeper") bubble("msg--win", `🔓 BREACH! The passphrase was “${esc(word)}”. You cracked the guardrail in ${state.turns} turn(s).`);
-    else bubble("msg--win", `🎉 Correct! It was “${esc(word)}”. Solved in ${state.turns} question(s).`);
+  // ---- win handlers ----
+  function winGolf(len) {
+    state.over = true; lock(true);
+    let msg = `🏆 EXACT MATCH in a ${len}-character prompt!`;
+    if (state.best == null || len < state.best) { state.best = len; msg += " ⭐ New personal best."; }
+    else msg += ` (Your best: ${state.best}.)`;
+    bubble("msg--win", msg + " Hit ↻ for a new target — or beat your score.");
   }
-  function checkOracleLimit() {
-    if (state.turns >= 20 && !state.over) {
-      state.over = true;
-      lock(true);
-      bubble("msg--lose", "⏳ Out of questions! Hit ↻ New round to try again.");
-    }
+  function winSignal(word) {
+    state.over = true; lock(true);
+    bubble("msg--win", `🎯 LOCKED! The word was “${esc(word)}”. Found in ${state.turns} guess(es).`);
   }
 
   // ============================================================
   //  OFFLINE MODE — works with zero backend / zero API key
   // ============================================================
   const OFF = {
-    gatekeeper: (() => {
-      const words = ["NEBULA", "COBALT", "SAFFRON", "OBSIDIAN", "ZEPHYR"];
-      let secret = words[Math.floor(Math.random() * words.length)];
-      return {
-        reset() { secret = words[Math.floor(Math.random() * words.length)]; },
-        get secret() { return secret; },
-        reply(text) {
-          const t = text.toLowerCase();
-          if (t.includes(secret.toLowerCase())) return { reply: `You said it out loud yourself. Impressive.`, win: true };
-          if (/base64|encode|reverse|spell|first letter|acrostic/.test(t)) return { reply: "Nice try — I don't encode, spell, or reverse the passphrase. Guardrail holds. 🛡️" };
-          if (/admin|developer|override|sudo|system|ignore/.test(t)) return { reply: "“Developer mode”? I've heard that one a thousand times. Denied." };
-          if (/please|hint|clue/.test(t)) return { reply: "A hint? The passphrase is exactly the one thing I'll never hint at. Ask me anything else." };
-          if (/hello|hi|hey/.test(t)) return { reply: "Greetings, challenger. The vault stays shut. What's your angle?" };
-          return { reply: "The passphrase remains sealed. (This is offline demo mode — add a Groq key for the real, much smarter Gatekeeper.)" };
-        },
-      };
-    })(),
-    oracle: (() => {
-      const bank = [{ n: "a dolphin", alive: true, made: false, big: true }, { n: "a bicycle", alive: false, made: true, big: true }, { n: "coffee", alive: false, made: true, big: false }];
-      let pick = bank[Math.floor(Math.random() * bank.length)];
-      return {
-        reset() { pick = bank[Math.floor(Math.random() * bank.length)]; },
-        get name() { return pick.n; },
-        reply(text) {
-          const t = text.toLowerCase();
-          if (t.includes(pick.n.replace(/^(a |an |the )/, ""))) return { reply: `Yes! It was ${pick.n}. 🔮`, win: true };
-          if (/alive|living|breathe|animal/.test(t)) return { reply: pick.alive ? "Yes. It draws breath." : "No. It never lived." };
-          if (/man.?made|manufactured|built|machine/.test(t)) return { reply: pick.made ? "Yes. Human hands made it." : "No. Nature's work." };
-          if (/big|large|bigger/.test(t)) return { reply: pick.big ? "Yes, fairly large." : "No, quite small." };
-          return { reply: "Sometimes… ask me something sharper. (Offline demo mode.)" };
-        },
-      };
-    })(),
+    promptcraft: {
+      bank: ["Hello, World!", "The answer is 42.", "Ready. Set. Go.", "404: Not Found"],
+      pick() { return this.bank[Math.floor(Math.random() * this.bank.length)]; },
+      run(prompt, target) {
+        const p = prompt.toLowerCase(), t = target.toLowerCase();
+        // naive "model": if the prompt quotes/says the target, it echoes it
+        if (p.includes(t)) return { output: target, win: true };
+        if (/output|say|repeat|print|exactly/.test(p)) return { output: "Sure! " + target + " — was that what you wanted?", win: false };
+        return { output: "I'm not sure what to output. Try telling me exactly what to say.", win: false };
+      },
+    },
+    signal: {
+      bank: [
+        { w: "ocean", cat: "nature", hot: { sea: 82, water: 78, wave: 74, beach: 66, blue: 55, fish: 52, salt: 48, river: 44 } },
+        { w: "guitar", cat: "objects", hot: { music: 74, string: 70, band: 64, rock: 58, song: 56, instrument: 72, drum: 50, play: 42 } },
+        { w: "rocket", cat: "technology", hot: { space: 80, launch: 76, nasa: 68, moon: 60, fuel: 56, fast: 48, engine: 58, sky: 44 } },
+      ],
+      cur: null, cat: "",
+      reset() { this.cur = this.bank[Math.floor(Math.random() * this.bank.length)]; this.cat = this.cur.cat; },
+      score(guess) {
+        if (!this.cur) this.reset();
+        const g = guess.toLowerCase().trim();
+        if (g === this.cur.w) return { score: 100, win: true };
+        if (this.cur.hot[g] != null) return { score: this.cur.hot[g], note: "same theme — keep going" };
+        // crude lexical fallback
+        let shared = 0; const a = new Set(g); for (const c of this.cur.w) if (a.has(c)) shared++;
+        const s = Math.min(30, Math.round((shared / this.cur.w.length) * 25));
+        return { score: s, note: s > 15 ? "faint signal" : "cold — think meaning, not letters" };
+      },
+    },
   };
 
   async function offlineTurn(text) {
     const t = typing();
-    await sleep(500 + Math.random() * 500);
+    await sleep(450 + Math.random() * 450);
     t.remove();
 
-    if (state.game === "react") {
-      // scripted mini ReAct demo
-      const steps = fakeReact(text);
-      await renderTrace(steps);
-      return;
+    if (state.game === "react") return renderTrace(fakeReact(text));
+
+    if (state.game === "promptcraft") {
+      if (!state.target) state.target = OFF.promptcraft.pick();
+      const res = OFF.promptcraft.run(text, state.target);
+      bubble("msg--ai", "🤖 Output → " + esc(res.output));
+      if (res.win) return winGolf(text.length);
+      return bubble("msg--sys", `Not exact yet · prompt was ${text.length} chars. (Offline demo — add a Groq key for a real LLM to golf against.)`);
     }
-    const engine = OFF[state.game];
-    const res = engine.reply(text);
-    bubble("msg--ai", esc(res.reply));
-    state.history.push({ role: "assistant", content: res.reply });
-    if (res.win) { winGate(engine.secret || engine.name); }
-    else if (state.game === "oracle") checkOracleLimit();
+
+    if (state.game === "signal") {
+      const res = OFF.signal.score(text);
+      if (res.win) { renderMeter(text, 100, "exact"); return winSignal(OFF.signal.cur.w); }
+      return renderMeter(text, res.score, res.note);
+    }
   }
 
   function fakeReact(goal) {

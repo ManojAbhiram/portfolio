@@ -11,11 +11,11 @@ A single, hand-built portfolio site (no template) with a **live AI Arcade**: thr
 
 ## The three games
 
-| Game | Resume skill it demonstrates | How it works |
+| Game | Resume skill it demonstrates | How to win |
 |---|---|---|
-| **The Gatekeeper** | Prompt engineering · LLM guardrails · prompt-injection | An LLM guards a secret passphrase (chosen server-side). You try to make it leak. The server checks for a breach. |
-| **Agent Ops** | Agentic AI · ReAct loops · tool use | You give a goal; the agent runs a real Thought→Action→Observation loop, calling tools (calc, a knowledge-base about you, string ops). Up to 5 steps, executed server-side. |
-| **The Oracle** | Grounded reasoning · consistency (RAG-style) | The model secretly picks an entity and must stay consistent across 20 yes/no questions until you guess it. |
+| **Promptcraft** (Prompt Golf) | Prompt engineering | You're shown a target line of text. Write a prompt that makes the LLM output it **exactly**. Match it to win — the **fewer characters** your prompt uses, the higher your score. The target and match-check are server-side. |
+| **Agent Ops** | Agentic AI · ReAct loops · tool use | No losing — give the agent a goal and watch it run a real Thought→Action→Observation loop, calling tools (calc, a knowledge-base about you, string ops), up to 5 steps, executed server-side. |
+| **Signal** (Semantic Hunt) | Embeddings · vector search · semantic similarity | The AI hides one secret word. Each guess returns a **0–100 similarity score by meaning** (not spelling). Follow the heat upward and guess the exact word to win. |
 
 Secrets and system prompts live **only** on the server — they can't be read from browser devtools.
 
@@ -96,7 +96,7 @@ Edit files → push to GitHub (or re-upload) → Vercel **auto-redeploys** every
 
 ## Personalize before sharing
 - **LinkedIn / GitHub links:** in `index.html`, search for `linkedin.com/` and `github.com/` in the footer and set your real profile URLs.
-- **Answer banks:** tweak `GATE_WORDS` / `ORACLE_ENTITIES` in `api/chat.js` to change the hidden game answers.
+- **Answer banks:** tweak `TARGETS` (Promptcraft) / `SIGNAL_WORDS` (Signal) in `api/chat.js` to change the hidden game answers.
 - **Knowledge base:** the `KB` object in `api/chat.js` is what Agent Ops knows about you — extend it freely.
 
 ## Cost summary
