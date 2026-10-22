@@ -1,0 +1,188 @@
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage[
+  pdftitle={Kollepara Naga Sai Manoj Abhiram - Software Engineer Resume},
+  pdfauthor={Kollepara Naga Sai Manoj Abhiram},
+  pdfsubject={Resume: Software Engineer},
+  pdfkeywords={Go, Python, Kafka, Microservices, REST APIs, PostgreSQL, Redis, RAG, Agentic AI, LLM, OCR},
+  colorlinks=false,
+  pdfborder={0 0 0}
+]{hyperref}
+\usepackage{enumitem}
+\usepackage[left=0.5in,top=0.35in,right=0.5in,bottom=0.35in]{geometry}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage[default]{sourcesanspro}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+
+% ATS: keep every word whole in the text layer (no hyphen splits, no fi/fl ligatures)
+\usepackage[none]{hyphenat}
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\raggedright
+\DisableLigatures[f]{encoding = *, family = *}
+
+\setstretch{0.96}
+
+\urlstyle{same}
+\input{glyphtounicode}
+\pdfgentounicode=1
+
+%-------------------------------------------
+% SECTION FORMATTING
+%-------------------------------------------
+
+\titleformat{\section}
+{\vspace{-4pt}\scshape\raggedright\large\color{black}}
+{}{0em}{}[\titlerule \vspace{-4pt}]
+
+%-------------------------------------------
+% CUSTOM COMMANDS
+%-------------------------------------------
+
+\newcommand{\resumeItem}[1]{
+\item \normalsize{#1}
+}
+
+\newcommand{\resumeSubheading}[4]{
+\item
+\begin{tabular*}{0.99\textwidth}[t]{l@{\extracolsep{\fill}}r}
+\textbf{#1} & #2 \\
+#3 & #4 \\
+\end{tabular*}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+\item
+\begin{tabular*}{0.99\textwidth}{l@{\extracolsep{\fill}}r}
+#1 & #2 \\
+\end{tabular*}
+}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{
+\begin{itemize}[leftmargin=0in,label={},itemsep=2pt,topsep=0pt]
+}
+
+\newcommand{\resumeSubHeadingListEnd}{
+\end{itemize}
+}
+
+\newcommand{\resumeItemListStart}{
+\begin{itemize}[leftmargin=0.15in,itemsep=1pt,topsep=0pt,parsep=0pt]
+}
+
+\newcommand{\resumeItemListEnd}{
+\end{itemize}
+}
+
+%-------------------------------------------
+% RESUME STARTS HERE
+%-------------------------------------------
+
+\begin{document}
+
+%----------HEADING----------
+
+\begin{center}
+{\huge \textbf{Kollepara Naga Sai Manoj Abhiram}}\\[2pt]
+\small
+\href{tel:+919581682255}{+91 9581682255}
+\hspace{4pt}|\hspace{4pt}
+\href{mailto:manoj.abhi2889@gmail.com}{manoj.abhi2889@gmail.com}
+\hspace{4pt}|\hspace{4pt}
+Hyderabad, Telangana\\[1pt]
+LinkedIn: \href{https://www.linkedin.com/in/naga-sai-manoj-abhiram-kollepara-b9840b222/}{linkedin.com/in/naga-sai-manoj-abhiram-kollepara-b9840b222}
+\hspace{4pt}|\hspace{4pt}
+GitHub: \href{https://github.com/ManojAbhiram}{github.com/ManojAbhiram}
+\end{center}
+
+%-----------SUMMARY-----------
+
+\section{Summary}
+\normalsize{Software Engineer with production experience in backend development and Generative AI. Proficient in Go and Python, with hands-on expertise building microservices, REST APIs, and Kafka-driven event-driven systems across CRM and EdTech platforms. Experienced in OCR pipelines, RAG workflows, Agentic AI, and domain-specific LLM fine-tuning. Passionate about building scalable, production-grade systems at the intersection of software engineering and AI.}
+
+%-----------EDUCATION-----------
+
+\section{Education}
+
+\resumeSubHeadingListStart
+
+\resumeSubheading
+{Shiv Nadar University Chennai}
+{Chennai, Tamil Nadu}
+{B.Tech Computer Science and Engineering (Internet of Things)}
+{Sept 2021 -- June 2025}
+
+\resumeSubHeadingListEnd
+
+%-----------EXPERIENCE-----------
+
+\section{Experience}
+
+\resumeSubHeadingListStart
+
+\resumeSubheading
+{Deepta AI}
+{Hyderabad, Telangana}
+{Software Engineer 1}
+{Aug 2025 -- Present}
+
+\resumeItemListStart
+\resumeItem{Designed OCR document-processing pipelines for CRM and EdTech platforms, turning unstructured inputs into structured data and cutting manual validation overhead by \textasciitilde{}60\%.}
+\resumeItem{Built RAG pipelines and Agentic AI workflows for CRM use cases, integrating LLMs and fine-tuning models on domain-specific data.}
+\resumeItem{Engineered Kafka-driven event pipelines in Go to stream real-time data across microservices, enabling high-throughput email and WhatsApp notifications for 10K+ users.}
+\resumeItem{Configured Omnichannel engagement platforms (WebEngage) to orchestrate email and WhatsApp campaigns, improving reach across CRM and EdTech products.}
+\resumeItem{Strengthened authentication reliability by building OTP and user verification flows with Redis-backed session management, cutting authentication latency by \textasciitilde{}40\%.}
+\resumeItem{Shipped 15+ REST APIs and CRUD modules in Go and PostgreSQL, powering listing pages, user interactions, and data management across CRM and EdTech platforms.}
+\resumeItemListEnd
+
+\resumeSubHeadingListEnd
+
+%-----------PROJECTS-----------
+
+\section{Projects}
+
+\resumeSubHeadingListStart
+
+\resumeProjectHeading
+{\textbf{Pest Detection Application} $|$ \emph{Deep Learning, Flask, React, AWS EC2, Selenium, Python}}{}
+\resumeItemListStart
+\resumeItem{Scraped and labeled a custom pest image dataset of 5K+ images across classes from BugGuide using Selenium, training an Inception-based CNN with augmentation to address severe class imbalance.}
+\resumeItem{Deployed a Flask and React app on AWS EC2 achieving \textasciitilde{}75\% classification accuracy with real-time pest identification from uploaded images.}
+\resumeItemListEnd
+
+\resumeProjectHeading
+{\textbf{Automated Personal Finance Manager} $|$ \emph{MERN Stack, Python, Machine Learning, NLP}}{}
+\resumeItemListStart
+\resumeItem{Built a full-stack finance platform with ML-based transaction categorization using Random Forest achieving \textasciitilde{}85\% accuracy, and an NLP chatbot for financial Q\&A.}
+\resumeItem{Delivered 6+ features including expense forecasting, interactive dashboards, budget alerts, multi-currency support, and a risk-profile-based stock recommendation module.}
+\resumeItemListEnd
+
+\resumeSubHeadingListEnd
+
+%-----------SKILLS-----------
+
+\section{Technical Skills}
+
+\begin{itemize}[leftmargin=0.15in,label={},itemsep=1pt,topsep=0pt,parsep=0pt]
+\normalsize{
+\item \textbf{Programming Languages:} Go, Python, SQL, JavaScript
+\item \textbf{Backend and Tools:} Kafka, Microservices, REST APIs, Flask, FastAPI, Streamlit, React, Selenium, Git, Postman
+\item \textbf{Databases and Caching:} PostgreSQL, Redis, MongoDB
+\item \textbf{AI / GenAI:} OCR, OpenCV, NLP, LLM Fine-Tuning, Prompt Engineering, RAG, Agentic AI, Vector Databases
+}
+\end{itemize}
+
+%-----------CERTIFICATIONS-----------
+
+\section{Certifications}
+
+\normalsize{IBM Generative AI Engineering Professional Certificate (Coursera) | Building Microservices API in Go (Coursera) | Joy of Computing using Python (NPTEL) | Data Mining (NPTEL)}
+
+\end{document}
