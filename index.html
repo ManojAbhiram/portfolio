@@ -4,261 +4,315 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Abhiram Kollepara | Software Engineer</title>
+  <title>Abhiram Kollepara — Software Engineer / GenAI</title>
   <meta name="description"
-    content="Kollepara Naga Sai Manoj Abhiram, Software Engineer at Deepta AI. Go microservices, Kafka event pipelines, REST APIs, OCR, RAG and Agentic AI. Includes a live AI arcade built on real LLM guardrails." />
+    content="Kollepara Naga Sai Manoj Abhiram — Software Engineer specializing in Go backends, event-driven microservices, and Agentic AI / GenAI systems. Featuring a live AI arcade." />
   <meta name="author" content="Kollepara Naga Sai Manoj Abhiram" />
-  <meta property="og:title" content="Abhiram Kollepara | Software Engineer" />
+  <meta property="og:title" content="Abhiram Kollepara — Software Engineer / GenAI" />
   <meta property="og:description"
-    content="Software Engineer with production Go, Kafka and GenAI experience. Resume, projects and a live AI arcade." />
+    content="Backend + Agentic AI engineer. Play a live AI arcade built on real LLM guardrails, ReAct loops, and prompt engineering." />
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Abhiram Kollepara" />
-  <meta name="twitter:card" content="summary" />
-  <meta name="theme-color" content="#F6F7F9" />
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Kollepara Naga Sai Manoj Abhiram",
-    "jobTitle": "Software Engineer",
-    "worksFor": { "@type": "Organization", "name": "Deepta AI" },
-    "alumniOf": "Shiv Nadar University Chennai",
-    "email": "mailto:manoj.abhi2889@gmail.com",
-    "address": { "@type": "PostalAddress", "addressLocality": "Hyderabad", "addressCountry": "IN" },
-    "sameAs": [
-      "https://linkedin.com/in/naga-sai-manoj-abhiram-kollepara-b9840b222",
-      "https://github.com/ManojAbhiram"
-    ],
-    "knowsAbout": ["Go", "Python", "Kafka", "Microservices", "REST APIs", "PostgreSQL", "Redis", "RAG", "Agentic AI", "LLM fine-tuning", "OCR"]
-  }
-  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://api.fontshare.com" />
-  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&display=swap"
     rel="stylesheet" />
-  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230B6B6F'/><text x='50' y='68' font-size='58' font-family='sans-serif' font-weight='700' text-anchor='middle' fill='white'>A</text></svg>" />
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◆</text></svg>" />
 </head>
 
 <body>
-  <a class="skip" href="#top">Skip to content</a>
-
-  <header class="nav" id="nav">
-    <div class="wrap nav__in">
-      <a href="#top" class="nav__brand">Abhiram Kollepara</a>
-      <nav class="nav__links" id="navLinks" aria-label="Primary">
-        <a href="#experience">Experience</a>
-        <a href="#projects">Projects</a>
-        <a href="#arcade">Live demo</a>
-        <a href="#skills">Skills</a>
-        <a href="#contact">Contact</a>
-      </nav>
-      <a href="assets/Resume_Abhiram.pdf" class="btn btn--sm nav__cta" target="_blank" rel="noopener">Resume (PDF)</a>
-      <button class="nav__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
-        <span></span><span></span>
-      </button>
+  <!-- Boot / loader -->
+  <div id="boot" class="boot">
+    <div class="boot__inner">
+      <pre class="boot__log" id="bootLog"></pre>
+      <div class="boot__bar"><span id="bootBar"></span></div>
     </div>
+  </div>
+
+  <canvas id="bg"></canvas>
+  <div class="grain"></div>
+  <div class="cursor" id="cursor"></div>
+
+  <!-- Nav -->
+  <header class="nav" id="nav">
+    <a href="#top" class="nav__brand">
+      <span class="nav__mark">◆</span>
+      <span class="nav__name">ABHIRAM<span class="nav__dot">.</span>K</span>
+    </a>
+    <nav class="nav__links">
+      <a href="#work">01 — Work</a>
+      <a href="#projects">02 — Projects</a>
+      <a href="#arcade" class="nav__pulse">03 — AI Arcade</a>
+      <a href="#stack">04 — Stack</a>
+    </nav>
+    <a href="assets/Resume_Abhiram.pdf" class="nav__cta" target="_blank" rel="noopener">
+      <span>Résumé</span>
+      <svg viewBox="0 0 24 24" width="14" height="14">
+        <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+    </a>
   </header>
 
   <main id="top">
-    <!-- SUMMARY -->
-    <section class="hero wrap">
-      <h1 class="hero__name">Kollepara Naga Sai Manoj Abhiram</h1>
-      <p class="hero__role">Software Engineer at Deepta AI, Hyderabad</p>
-
-      <p class="hero__lede">
-        Software Engineer with production experience in backend development and Generative AI. I build
-        microservices, REST APIs and Kafka-driven event systems in Go and Python across CRM and EdTech platforms,
-        plus OCR pipelines, RAG workflows and Agentic AI.
-      </p>
-
-      <div class="hero__cta">
-        <a class="btn btn--primary" href="assets/Resume_Abhiram.pdf" target="_blank" rel="noopener">Download resume (PDF)</a>
-        <a class="btn" href="mailto:manoj.abhi2889@gmail.com">Email me</a>
-        <a class="btn" href="https://linkedin.com/in/naga-sai-manoj-abhiram-kollepara-b9840b222" target="_blank"
-          rel="noopener">LinkedIn</a>
-        <a class="btn" href="https://github.com/ManojAbhiram" target="_blank" rel="noopener">GitHub</a>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero__meta">
+        <div class="meta-line"><span class="k">STATUS</span><span class="v"><i class="live"></i> AVAILABLE FOR
+            WORK</span></div>
+        <div class="meta-line"><span class="k">ROLE</span><span class="v">SOFTWARE ENGINEER · BACKEND + GENAI</span>
+        </div>
+        <div class="meta-line"><span class="k">BASE</span><span class="v">HYDERABAD, IN — 17.3850°N</span></div>
       </div>
 
-      <dl class="spec">
-        <div><dt>Role</dt><dd>Software Engineer 1, Deepta AI (Aug 2025 to present)</dd></div>
-        <div><dt>Location</dt><dd>Hyderabad, Telangana</dd></div>
-        <div><dt>Education</dt><dd>B.Tech CSE (IoT), Shiv Nadar University Chennai, 2025</dd></div>
-        <div><dt>Status</dt><dd><i class="live" aria-hidden="true"></i> Open to new roles</dd></div>
-      </dl>
+      <h1 class="hero__title">
+        <span class="line"><span class="reveal">I build the</span></span>
+        <span class="line"><span class="reveal">systems <em>agents</em></span></span>
+        <span class="line"><span class="reveal">think through.</span></span>
+      </h1>
+
+      <div class="hero__grid">
+        <p class="hero__lede">
+          I'm <strong>Abhiram</strong> — a software engineer shipping production Go backends,
+          Kafka-driven event pipelines, and <span class="hl">agentic AI</span> at
+          <a href="#work" class="ilink">Deepta AI</a>. This site isn't a slideshow.
+          It's a live demo: scroll down and <a href="#arcade" class="ilink">play against real LLMs</a>
+          wired to guardrails, ReAct loops, and RAG-style prompting.
+        </p>
+        <div class="hero__stats">
+          <div class="stat"><span class="stat__n" data-count="15">0</span><span class="stat__l">REST APIs shipped</span>
+          </div>
+          <div class="stat"><span class="stat__n" data-count="10" data-suffix="K+">0</span><span class="stat__l">users
+              on live pipelines</span></div>
+          <div class="stat"><span class="stat__n" data-count="60" data-suffix="%">0</span><span class="stat__l">manual
+              work cut by OCR</span></div>
+        </div>
+      </div>
+
+      <a href="#arcade" class="hero__scroll">
+        <span>ENTER THE ARCADE</span>
+        <span class="hero__scroll-ico">↓</span>
+      </a>
     </section>
 
-    <!-- EXPERIENCE -->
-    <section class="section wrap" id="experience">
-      <h2 class="section__title">Experience</h2>
+    <!-- TICKER -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker__track">
+        <span>GO</span><span>◆</span><span>KAFKA</span><span>◆</span><span>MICROSERVICES</span><span>◆</span><span>RAG</span><span>◆</span><span>AGENTIC
+          AI</span><span>◆</span><span>LLM
+          FINE-TUNING</span><span>◆</span><span>OCR</span><span>◆</span><span>POSTGRESQL</span><span>◆</span><span>REDIS</span><span>◆</span><span>FASTAPI</span><span>◆</span><span>VECTOR
+          DBs</span><span>◆</span>
+        <span>GO</span><span>◆</span><span>KAFKA</span><span>◆</span><span>MICROSERVICES</span><span>◆</span><span>RAG</span><span>◆</span><span>AGENTIC
+          AI</span><span>◆</span><span>LLM
+          FINE-TUNING</span><span>◆</span><span>OCR</span><span>◆</span><span>POSTGRESQL</span><span>◆</span><span>REDIS</span><span>◆</span><span>FASTAPI</span><span>◆</span><span>VECTOR
+          DBs</span><span>◆</span>
+      </div>
+    </div>
 
-      <div class="job">
-        <div class="job__head">
-          <div>
-            <h3>Deepta AI</h3>
-            <p class="job__role">Software Engineer 1</p>
+    <!-- WORK -->
+    <section class="section" id="work">
+      <div class="section__head">
+        <span class="section__idx">01</span>
+        <h2 class="section__title">Where I work</h2>
+        <span class="section__hint">// production systems, real scale</span>
+      </div>
+
+      <div class="work">
+        <div class="work__side">
+          <div class="work__co">
+            <span class="work__logo">▲</span>
+            <div>
+              <h3>Deepta AI</h3>
+              <p>Software Engineer 1 · Hyderabad</p>
+              <p class="work__date">AUG 2025 — PRESENT</p>
+            </div>
           </div>
-          <p class="job__meta">Aug 2025 to present<br />Hyderabad, Telangana</p>
+          <p class="work__blurb">Backend + GenAI for CRM and EdTech platforms. I own services from the queue to the
+            model.</p>
         </div>
-        <ul class="bullets">
-          <li>Designed <strong>OCR document-processing pipelines</strong> for CRM and EdTech platforms, turning
-            unstructured inputs into structured data and cutting manual validation overhead by
-            <span class="metric">~60%</span>.</li>
-          <li>Built <strong>RAG pipelines and Agentic AI workflows</strong> for CRM use cases, integrating LLMs and
-            fine-tuning models on domain-specific data.</li>
-          <li>Engineered <strong>Kafka-driven event pipelines in Go</strong> to stream real-time data across
-            microservices, enabling high-throughput email and WhatsApp notifications for
-            <span class="metric">10K+ users</span>.</li>
-          <li>Configured <strong>Omnichannel engagement platforms (WebEngage)</strong> to orchestrate email and
-            WhatsApp campaigns, improving reach across CRM and EdTech products.</li>
-          <li>Strengthened authentication reliability by building OTP and user verification flows with Redis-backed
-            session management, cutting authentication latency by <span class="metric">~40%</span>.</li>
-          <li>Shipped <span class="metric">15+ REST APIs</span> and CRUD modules in Go and PostgreSQL, powering
-            listing pages, user interactions, and data management across CRM and EdTech platforms.</li>
+        <ul class="work__list">
+          <li>
+            <span class="work__tag">PIPELINES</span>
+            <p>Engineered <strong>Kafka-driven event pipelines in Go</strong> streaming real-time data across
+              microservices — powering email + WhatsApp notifications for <strong>10K+ users</strong>.</p>
+          </li>
+          <li>
+            <span class="work__tag">GENAI</span>
+            <p>Built <strong>RAG pipelines and Agentic AI workflows</strong>, integrating LLMs and domain-specific
+              fine-tuning for CRM use cases.</p>
+          </li>
+          <li>
+            <span class="work__tag">OCR</span>
+            <p>Designed <strong>OCR document-processing pipelines</strong> turning unstructured inputs into structured
+              data — cutting manual validation <strong>~60%</strong>.</p>
+          </li>
+          <li>
+            <span class="work__tag">APIs</span>
+            <p>Shipped <strong>15+ REST APIs</strong> in Go + PostgreSQL, plus Redis-backed sessions that cut auth
+              latency <strong>~40%</strong>.</p>
+          </li>
         </ul>
       </div>
     </section>
 
     <!-- PROJECTS -->
-    <section class="section wrap" id="projects">
-      <h2 class="section__title">Projects</h2>
+    <section class="section" id="projects">
+      <div class="section__head">
+        <span class="section__idx">02</span>
+        <h2 class="section__title">Selected projects</h2>
+        <span class="section__hint">// shipped, deployed, measured</span>
+      </div>
 
-      <article class="proj">
-        <div class="proj__head">
-          <h3>Pest Detection Application</h3>
-          <p class="proj__stack">Deep Learning, Flask, React, AWS EC2, Selenium, Python</p>
-        </div>
-        <ul class="bullets">
-          <li>Scraped and labeled a custom pest image dataset of <span class="metric">5K+ images</span> across
-            classes from BugGuide using Selenium, training an Inception-based CNN with augmentation to address
-            severe class imbalance.</li>
-          <li>Deployed a Flask and React app on AWS EC2 achieving <span class="metric">~75%</span> classification
-            accuracy with real-time pest identification from uploaded images.</li>
-        </ul>
-      </article>
-
-      <article class="proj">
-        <div class="proj__head">
-          <h3>Automated Personal Finance Manager</h3>
-          <p class="proj__stack">MERN Stack, Python, Machine Learning, NLP</p>
-        </div>
-        <ul class="bullets">
-          <li>Built a full-stack finance platform with ML-based transaction categorization using Random Forest
-            achieving <span class="metric">~85%</span> accuracy, and an NLP chatbot for financial Q&amp;A.</li>
-          <li>Delivered <span class="metric">6+ features</span> including expense forecasting, interactive
-            dashboards, budget alerts, multi-currency support, and a risk-profile-based stock recommendation
-            module.</li>
-        </ul>
-      </article>
+      <div class="projects">
+        <article class="proj" tabindex="0">
+          <div class="proj__num">P—01</div>
+          <h3 class="proj__title">Pest Detection Application</h3>
+          <p class="proj__desc">Scraped + labeled a custom 5K-image dataset from BugGuide via Selenium, trained an
+            Inception CNN with augmentation to fight class imbalance, and deployed a Flask + React app on AWS EC2 at
+            <strong>~75% accuracy</strong> with real-time identification.
+          </p>
+          <div class="proj__tags"><span>Deep Learning</span><span>Flask</span><span>React</span><span>AWS
+              EC2</span><span>Selenium</span></div>
+        </article>
+        <article class="proj" tabindex="0">
+          <div class="proj__num">P—02</div>
+          <h3 class="proj__title">Automated Personal Finance Manager</h3>
+          <p class="proj__desc">Full-stack MERN finance platform with ML transaction categorization (Random Forest,
+            <strong>~85% accuracy</strong>) and an NLP chatbot for financial Q&amp;A — plus forecasting, budget alerts,
+            multi-currency, and risk-based stock recommendations.
+          </p>
+          <div class="proj__tags"><span>MERN</span><span>Python</span><span>Machine Learning</span><span>NLP</span>
+          </div>
+        </article>
+        <article class="proj proj--wide" tabindex="0">
+          <div class="proj__num">P—03</div>
+          <h3 class="proj__title">This portfolio ↓</h3>
+          <p class="proj__desc">The AI Arcade below is a real project: a serverless backend proxies live LLMs, keeps
+            game secrets server-side, enforces guardrails, and drives a ReAct tool-use loop — the same patterns I build
+            at work, turned into games you can play.</p>
+          <div class="proj__tags"><span>Serverless</span><span>Prompt Engineering</span><span>Semantic
+              Search</span><span>ReAct Agents</span></div>
+        </article>
+      </div>
     </section>
 
-    <!-- LIVE DEMO (ARCADE) -->
-    <section class="section wrap arcade" id="arcade">
-      <h2 class="section__title">Live demo: AI Arcade</h2>
-      <p class="arcade__intro">
-        Three small games that run on a real LLM through a serverless function. Game secrets and system prompts
-        stay on the server, so the answers are not in the page source. They demonstrate prompt engineering, a
-        ReAct agent loop and embedding-style similarity search.
-        <span class="arcade__note" id="backendState">Checking backend…</span>
-      </p>
+    <!-- ARCADE -->
+    <section class="section arcade" id="arcade">
+      <div class="section__head">
+        <span class="section__idx">03</span>
+        <h2 class="section__title">The AI Arcade</h2>
+        <span class="section__hint">// three games. real models. no scripts.</span>
+      </div>
+
+      <div class="arcade__intro">
+        <p>Each game is a working demo of a technique from my day job. A backend function talks to a live LLM and keeps
+          the rules honest — you can't peek at the answer in the page source. <span class="arcade__note"
+            id="backendState">Checking backend…</span></p>
+      </div>
 
       <div class="arcade__grid">
         <button class="gcard" data-game="promptcraft">
-          <span class="gcard__top"><span class="gcard__id">Game 1</span><span class="gcard__diff">Prompt engineering</span></span>
-          <span class="gcard__title">Promptcraft</span>
-          <span class="gcard__desc">Write the shortest prompt that makes a live LLM output a target line exactly.
-            Fewer characters score higher.</span>
-          <span class="gcard__play">Play</span>
+          <div class="gcard__top"><span class="gcard__id">GAME 01</span><span class="gcard__diff">PROMPT GOLF</span></div>
+          <h3 class="gcard__title">Promptcraft</h3>
+          <p class="gcard__desc">You're given a target line of text. Write the <em>shortest</em> prompt that makes a live
+            LLM output it <em>exactly</em>. Fewer characters = higher score. Real prompt engineering, gamified.</p>
+          <span class="gcard__play">PLAY →</span>
         </button>
 
         <button class="gcard" data-game="react">
-          <span class="gcard__top"><span class="gcard__id">Game 2</span><span class="gcard__diff">Agentic AI</span></span>
-          <span class="gcard__title">Agent Ops</span>
-          <span class="gcard__desc">Give an agent a goal and watch it work through a Thought, Action, Observation
-            loop, calling tools to solve it.</span>
-          <span class="gcard__play">Play</span>
+          <div class="gcard__top"><span class="gcard__id">GAME 02</span><span class="gcard__diff">AGENTIC</span></div>
+          <h3 class="gcard__title">Agent Ops</h3>
+          <p class="gcard__desc">Give an autonomous agent a goal. Watch it reason in a live <em>Thought → Action →
+              Observation</em> ReAct loop, calling tools to solve it. The core of agentic AI, visualized.</p>
+          <span class="gcard__play">PLAY →</span>
         </button>
 
         <button class="gcard" data-game="signal">
-          <span class="gcard__top"><span class="gcard__id">Game 3</span><span class="gcard__diff">Embeddings</span></span>
-          <span class="gcard__title">Signal</span>
-          <span class="gcard__desc">Find a hidden word. Each guess returns a 0 to 100 similarity score by meaning,
-            not spelling.</span>
-          <span class="gcard__play">Play</span>
+          <div class="gcard__top"><span class="gcard__id">GAME 03</span><span class="gcard__diff">EMBEDDINGS</span></div>
+          <h3 class="gcard__title">Signal</h3>
+          <p class="gcard__desc">The AI hides a secret word. Every guess returns a <em>0–100 semantic-similarity</em>
+            score — hotter means closer in meaning. Triangulate the word. Vector-search intuition, as a game.</p>
+          <span class="gcard__play">PLAY →</span>
         </button>
       </div>
     </section>
 
-    <!-- SKILLS -->
-    <section class="section wrap" id="skills">
-      <h2 class="section__title">Technical skills</h2>
-      <dl class="skills">
-        <div>
-          <dt>Programming languages</dt>
-          <dd>
-            <ul class="inline"><li>Go</li><li>Python</li><li>SQL</li><li>JavaScript</li></ul>
-          </dd>
+    <!-- STACK -->
+    <section class="section" id="stack">
+      <div class="section__head">
+        <span class="section__idx">04</span>
+        <h2 class="section__title">The stack</h2>
+        <span class="section__hint">// tools I reach for</span>
+      </div>
+      <div class="stack">
+        <div class="stack__col">
+          <h4>Languages</h4>
+          <ul>
+            <li>Go</li>
+            <li>Python</li>
+            <li>SQL</li>
+          </ul>
         </div>
-        <div>
-          <dt>Backend and tools</dt>
-          <dd>
-            <ul class="inline"><li>Kafka</li><li>Microservices</li><li>REST APIs</li><li>Flask</li><li>FastAPI</li><li>Streamlit</li><li>React</li><li>Selenium</li><li>Git</li><li>Postman</li></ul>
-          </dd>
+        <div class="stack__col">
+          <h4>Backend &amp; Infra</h4>
+          <ul>
+            <li>Kafka</li>
+            <li>Microservices</li>
+            <li>REST APIs</li>
+            <li>FastAPI</li>
+            <li>Flask</li>
+          </ul>
         </div>
-        <div>
-          <dt>Databases and caching</dt>
-          <dd>
-            <ul class="inline"><li>PostgreSQL</li><li>Redis</li><li>MongoDB</li></ul>
-          </dd>
+        <div class="stack__col">
+          <h4>Data &amp; Cache</h4>
+          <ul>
+            <li>PostgreSQL</li>
+            <li>Redis</li>
+            <li>MongoDB</li>
+            <li>Vector DBs</li>
+          </ul>
         </div>
-        <div>
-          <dt>AI / GenAI</dt>
-          <dd>
-            <ul class="inline"><li>OCR</li><li>OpenCV</li><li>NLP</li><li>LLM Fine-Tuning</li><li>Prompt Engineering</li><li>RAG</li><li>Agentic AI</li><li>Vector Databases</li></ul>
-          </dd>
+        <div class="stack__col">
+          <h4>AI / GenAI</h4>
+          <ul>
+            <li>RAG</li>
+            <li>Agentic AI</li>
+            <li>LLM Fine-Tuning</li>
+            <li>Prompt Engineering</li>
+            <li>OCR / OpenCV</li>
+          </ul>
         </div>
-      </dl>
-    </section>
-
-    <!-- EDUCATION + CERTIFICATIONS -->
-    <section class="section wrap" id="education">
-      <h2 class="section__title">Education</h2>
-      <div class="job__head">
-        <div>
-          <h3>Shiv Nadar University Chennai</h3>
-          <p class="job__role">B.Tech Computer Science and Engineering (Internet of Things)</p>
-        </div>
-        <p class="job__meta">Sept 2021 to June 2025<br />Chennai, Tamil Nadu</p>
       </div>
 
-      <h2 class="section__title section__title--sub">Certifications</h2>
-      <ul class="bullets bullets--plain">
-        <li>IBM Generative AI Engineering Professional Certificate, Coursera</li>
-        <li>Building Microservices API in Go, Coursera</li>
-        <li>Joy of Computing using Python, NPTEL</li>
-        <li>Data Mining, NPTEL</li>
-      </ul>
+      <div class="certs">
+        <span class="certs__label">CERTIFIED</span>
+        <span>IBM Generative AI Engineering — Coursera</span><i>·</i>
+        <span>Building Microservices in Go — Coursera</span><i>·</i>
+        <span>Joy of Computing (Python) — NPTEL</span><i>·</i>
+        <span>Data Mining — NPTEL</span>
+      </div>
     </section>
 
     <!-- CONTACT -->
     <footer class="footer" id="contact">
-      <div class="wrap">
-        <h2 class="section__title">Contact</h2>
-        <p class="footer__lede">Open to Software Engineer roles. The fastest way to reach me is email.</p>
+      <div class="footer__big">
+        <span class="footer__pre">Let's build something</span>
         <a href="mailto:manoj.abhi2889@gmail.com" class="footer__mail">manoj.abhi2889@gmail.com</a>
-        <ul class="footer__links">
-          <li><a href="tel:+919581682255">+91 95816 82255</a></li>
-          <li><a href="https://linkedin.com/in/naga-sai-manoj-abhiram-kollepara-b9840b222" target="_blank"
-              rel="noopener">LinkedIn</a></li>
-          <li><a href="https://github.com/ManojAbhiram" target="_blank" rel="noopener">GitHub</a></li>
-          <li><a href="assets/Resume_Abhiram.pdf" target="_blank" rel="noopener">Resume (PDF)</a></li>
-        </ul>
-        <p class="footer__sig">© <span id="year"></span> Kollepara Naga Sai Manoj Abhiram</p>
+      </div>
+      <div class="footer__row">
+        <div class="footer__links">
+          <a href="https://linkedin.com/in/naga-sai-manoj-abhiram-kollepara-b9840b222" target="_blank"
+            rel="noopener">LinkedIn ↗</a>
+          <a href="https://github.com/ManojAbhiram" target="_blank" rel="noopener">GitHub ↗</a>
+          <a href="tel:+919581682255">+91 95816 82255</a>
+          <a href="assets/Resume_Abhiram.pdf" target="_blank" rel="noopener">Résumé ↗</a>
+        </div>
+        <div class="footer__sig">
+          <span>KOLLEPARA NAGA SAI MANOJ ABHIRAM</span>
+          <span>© <span id="year"></span> — Built from scratch, no template.</span>
+        </div>
       </div>
     </footer>
   </main>
@@ -266,22 +320,22 @@
   <!-- GAME MODAL -->
   <div class="modal" id="gameModal" aria-hidden="true">
     <div class="modal__scrim" data-close></div>
-    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal__panel" role="dialog" aria-modal="true">
       <div class="modal__bar">
-        <span class="modal__title" id="modalTitle">Game</span>
+        <div class="modal__dots"><i></i><i></i><i></i></div>
+        <span class="modal__title" id="modalTitle">GAME</span>
         <button class="modal__x" data-close aria-label="Close">✕</button>
       </div>
       <div class="modal__meta" id="modalMeta"></div>
-      <div class="modal__log" id="chatLog" aria-live="polite"></div>
+      <div class="modal__log" id="chatLog"></div>
       <div class="modal__foot">
         <form id="chatForm" class="chatbar" autocomplete="off">
-          <input id="chatInput" class="chatbar__input" placeholder="Type your move…" autocomplete="off"
-            aria-label="Your move" />
-          <button type="submit" class="chatbar__send" id="chatSend">Send</button>
+          <input id="chatInput" class="chatbar__input" placeholder="Type your move…" autocomplete="off" />
+          <button type="submit" class="chatbar__send" id="chatSend">SEND</button>
         </form>
         <div class="modal__actions">
-          <button class="mini" id="btnRestart">New round</button>
-          <button class="mini" id="btnHint">How to win</button>
+          <button class="mini" id="btnRestart">↻ New round</button>
+          <button class="mini" id="btnHint">? How to win</button>
         </div>
       </div>
     </div>
