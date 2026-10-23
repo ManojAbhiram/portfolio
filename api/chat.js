@@ -103,11 +103,28 @@ function runTool(tool, input) {
 }
 
 // ---- Groq call ----
+const GROQ_MODELS_URL = "https://api.groq.com/openai/v1/models";
+const NON_CHAT = /whisper|tts|guard|prompt-guard|orpheus|embed|playai|distil/i;
+let modelCache = { at: 0, ids: [] };
+
+// Every chat model this key can use, fetched live and cached for 10 minutes.
+async function availableModels(key) {
+  if (Date.now() - modelCache.at < 600000 && modelCache.ids.length) return modelCache.ids;
+  try {
+    const r = await fetch(GROQ_MODELS_URL, { headers: { Authorization: "Bearer " + key } });
+    if (!r.ok) return [];
+    const data = await r.json();
+    const ids = (data.data || []).filter((m) => m.active !== false && !NON_CHAT.test(m.id)).map((m) => m.id);
+    modelCache = { at: Date.now(), ids };
+    return ids;
+  } catch { return []; }
+}
+
 async function groq(messages, { model = MODEL, temperature = 0.7, max_tokens = 400, json = false } = {}) {
   const key = process.env.GROQ_API_KEY;
   if (!key) { const err = new Error("NO_KEY"); err.code = "NO_KEY"; throw err; }
-  // If a model is gone or not enabled for this key, fall through to the next.
-  const candidates = [...new Set([model, FAST_MODEL, "openai/gpt-oss-20b"])];
+  // Preferred model first, then every other model the key can use.
+  const candidates = [...new Set([model, FAST_MODEL, ...(await availableModels(key))])].slice(0, 6);
   let lastErr;
   for (const m of candidates) {
     const body = { model: m, messages, temperature, max_tokens };
@@ -123,7 +140,8 @@ async function groq(messages, { model = MODEL, temperature = 0.7, max_tokens = 4
     }
     const t = await r.text().catch(() => "");
     lastErr = new Error("Groq " + r.status + ": " + t.slice(0, 300));
-    if (r.status !== 404) break;
+    // A bad key or account problem will not improve on another model.
+    if (r.status === 401 || r.status === 403) break;
   }
   throw lastErr;
 }
