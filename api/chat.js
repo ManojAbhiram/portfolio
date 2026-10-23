@@ -106,19 +106,26 @@ function runTool(tool, input) {
 async function groq(messages, { model = MODEL, temperature = 0.7, max_tokens = 400, json = false } = {}) {
   const key = process.env.GROQ_API_KEY;
   if (!key) { const err = new Error("NO_KEY"); err.code = "NO_KEY"; throw err; }
-  const body = { model, messages, temperature, max_tokens };
-  if (json) body.response_format = { type: "json_object" };
-  const r = await fetch(GROQ_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: "Bearer " + key },
-    body: JSON.stringify(body),
-  });
-  if (!r.ok) {
+  // If a model is gone or not enabled for this key, fall through to the next.
+  const candidates = [...new Set([model, FAST_MODEL, "openai/gpt-oss-20b"])];
+  let lastErr;
+  for (const m of candidates) {
+    const body = { model: m, messages, temperature, max_tokens };
+    if (json) body.response_format = { type: "json_object" };
+    const r = await fetch(GROQ_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + key },
+      body: JSON.stringify(body),
+    });
+    if (r.ok) {
+      const data = await r.json();
+      return data.choices?.[0]?.message?.content?.trim() || "";
+    }
     const t = await r.text().catch(() => "");
-    throw new Error("Groq " + r.status + ": " + t.slice(0, 300));
+    lastErr = new Error("Groq " + r.status + ": " + t.slice(0, 300));
+    if (r.status !== 404) break;
   }
-  const data = await r.json();
-  return data.choices?.[0]?.message?.content?.trim() || "";
+  throw lastErr;
 }
 
 // ============================================================
